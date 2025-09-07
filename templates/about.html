@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">About BlueWave Solutions</h2>
+  <p>BlueWave Solutions is committed to addressing freshwater scarcity through innovative micro-desalination units and real-time environmental monitoring.</p>
+  <p>Our mission is to combine renewable energy, data-driven insights, and customer-centric eCommerce to provide sustainable solutions to coastal communities.</p>
+
+  <hr class="my-4" />
+
+  <h3 class="mb-3">SWE7301 – Team 5</h3>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+    <!-- Member: Charles -->
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/profile/charles.jpg' %}" class="card-img-top" alt="Charles">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Charles Ugwute</h5>
+          <p class="text-muted mb-2">Team Lead & Backend Engineer</p>
+          <p class="card-text small">Leads delivery, owns Django backend, database integration (MySQL), authentication/authorization, and CI checks.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Member: Kenneth -->
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/profile/kenneth.jpg' %}" class="card-img-top" alt="Kenneth">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Kenneth Nwogbo</h5>
+          <p class="text-muted mb-2">Frontend Engineer</p>
+          <p class="card-text small">Owns UI/UX, responsive Bootstrap layouts, and visual consistency across templates and components.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Member: Nelson -->
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/profile/nelson.jpg' %}" class="card-img-top" alt="Nelson">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Nelson Chukwu</h5>
+          <p class="text-muted mb-2">Data & Integrations</p>
+          <p class="card-text small">Integrates external telemetry API (JWT), data shaping, and metrics/dashboard reliability.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Member: Paul -->
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/profile/paul.jpg' %}" class="card-img-top" alt="Paul">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Paul Chukwudi</h5>
+          <p class="text-muted mb-2">QA & DevOps</p>
+          <p class="card-text small">Drives testing, release hygiene, and environment security hardening for production readiness.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Member: Samuel -->
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/profile/samuel.jpg' %}" class="card-img-top" alt="Samuel">
+        <div class="card-body">
+          <h5 class="card-title mb-1">Samuel Nwokpuru</h5>
+          <p class="text-muted mb-2">Product & Research</p>
+          <p class="card-text small">Shapes product requirements, user journeys, and research for desalination and monitoring use cases.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5" />
+  <div class="row">
+    <div class="col">
+      <h3 class="mb-3">Project Overview</h3>
+      <p class="mb-1">This platform demonstrates:</p>
+      <ul>
+        <li>eCommerce catalog and subscriptions for micro-desalination units.</li>
+        <li>Role-based authentication and secure session management.</li>
+        <li>Environmental metrics dashboard via JWT-authenticated API.</li>
+        <li>Production-ready security settings (HTTPS, HSTS, CSRF, XSS protections).</li>
+      </ul>
+    </div>
+  <div class="col">
+    <h3 class="mb-3">Technologies Used</h3>
+    <ul>
+      <li>Django 4.2+ with Django REST Framework for backend and API.</li>
+      <li>Bootstrap 5.3 for responsive frontend design.</li>
+      <li>MySQL for relational database management.</li>
+      <li>GitHub Actions for CI/CD pipelines.</li>
+      <li>Third-party APIs for telemetry data integration.</li>
+  </div>
+  </div>
+  <hr class="my-4" />
+  <div class="mt-4 mb-5">
+    <h4 class="mb-3">Collaboration & Repositories</h4>
+    <div class="d-flex flex-wrap gap-3">
+      <a class="btn btn-outline-dark btn-sm" href="https://github.com/" target="_blank" rel="noopener">
+        <i class="fab fa-github me-1"></i> GitHub
+      </a>
+      <a class="btn btn-outline-primary btn-sm" style="border-color:#026AA7;color:#026AA7" href="https://trello.com/" target="_blank" rel="noopener">
+        <i class="fab fa-trello me-1"></i> Trello
+      </a>
+      <a class="btn btn-outline-danger btn-sm" style="border-color:#FF4F5A;color:#FF4F5A" href="https://miro.com/" target="_blank" rel="noopener">
+        <i class="fas fa-shapes me-1"></i> Miro
+      </a>
+      <a class="btn btn-outline-success btn-sm" style="border-color:#00B140;color:#00B140" href="https://www.lucidchart.com/" target="_blank" rel="noopener">
+        <i class="fas fa-project-diagram me-1"></i> Lucidchart
+      </a>
+    </div>
+    <p class="text-muted small mt-2">Replace these with your actual workspace links.</p>
+  </div>
+</div>
+{% endblock %}
