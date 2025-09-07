@@ -7,15 +7,23 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ('username', 'email', 'role', 'password1', 'password2')
-
-        for name, field in self.fields.items():
-            if name == 'role':
-                field.widget.attrs.update({'class': 'form-select'})
-            else:
-                existing = field.widget.attrs.get('class', '')
-                field.widget.attrs.update({'class': (existing + ' form-control').strip()})
-            if name in placeholders:
-                field.widget.attrs.setdefault('placeholder', placeholders[name])
+    
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            placeholders = {
+                'username': 'Enter your username',
+                'email': 'Enter your email address',
+                'password1': 'Enter your password',
+                'password2': 'Confirm your password',
+            }
+            for name, field in self.fields.items():
+                if name == 'role':
+                    field.widget.attrs.update({'class': 'form-select'})
+                else:
+                    existing = field.widget.attrs.get('class', '')
+                    field.widget.attrs.update({'class': (existing + ' form-control').strip()})
+                if name in placeholders:
+                    field.widget.attrs.setdefault('placeholder', placeholders[name])
 
     def save(self, commit=True):
         user = super().save(commit=False)

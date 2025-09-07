@@ -63,7 +63,7 @@ MIDDLEWARE = [
 #API_BASE_URL = 'https://localhost:5030/'
 
 # Root URL configuration
-ROOT_URLCONF = 'web.urls'
+ROOT_URLCONF = 'bluewave_web.urls'
 
 # Templates
 TEMPLATES = [
@@ -83,7 +83,7 @@ TEMPLATES = [
 ]
 
 # WSGI application
-WSGI_APPLICATION = 'web.wsgi.application'
+WSGI_APPLICATION = 'bluewave_web.wsgi.application'
 
 
 # Database
@@ -146,7 +146,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
 # URL of the Flask API for metrics
-API_BASE_URL = os.environ.get('API_BASE_URL', 'http://localhost:5030')
+API_BASE_URL = os.environ.get('API_BASE_URL', 'http://localhost:5000')
 
 # Optional API auth credentials for obtaining JWTs
 API_USERNAME = os.environ.get('API_USERNAME')
