@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex align-items-center gap-2">
+    <h2 class="mb-0">Environmental Metrics</h2>
+    {% if telemetry_source == 'live' %}
+      <span class="badge bg-success">Live</span>
+    {% elif telemetry_source == 'demo' %}
+      <span class="badge bg-secondary">Demo</span>
+    {% else %}
+      <span class="badge bg-warning text-dark">No Data</span>
+    {% endif %}
+  </div>
+  {% if telemetry %}
+    <div class="table-responsive">
+      <table class="table table-striped table-sm align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Salinity</th>
+          <th>pH</th>
+          <th>Temperature</th>
+          <th>Location</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in telemetry %}
+        <tr>
+          <td>{{ record.data.id }}</td>
+          <td>{{ record.data.salinity }}</td>
+          <td>{{ record.data.pH }}</td>
+          <td>{{ record.data.temperature }}</td>
+          <td>{{ record.data.location }}</td>
+          <td>{{ record.data.timestamp }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>No telemetry data available.</p>
+  {% endif %}
+</div>
+{% endblock %}

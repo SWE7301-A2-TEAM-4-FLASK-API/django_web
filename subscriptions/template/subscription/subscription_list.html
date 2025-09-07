@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  {% if messages %}
+    <div class="mb-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <h2>Your Subscriptions</h2>
+  {% if subscriptions %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Started</th>
+          <th>Status</th>
+          <th>Renewal Date</th>
+          <th>Payment Method</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in subscriptions %}
+        <tr>
+          <td>{{ sub.product.name }}</td>
+          <td>{{ sub.started_at|date:"Y-m-d" }}</td>
+          <td>
+            {% if sub.active %}
+              <span class="text-success fw-semibold">Active</span>
+            {% else %}
+              <span class="text-muted">Inactive</span>
+            {% endif %}
+          </td>
+          <td>{{ sub.renewal_date|date:"Y-m-d"|default:"—" }}</td>
+          <td>{{ sub.payment_method|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No subscriptions found.</p>
+  {% endif %}
+</div>
+{% endblock %}
