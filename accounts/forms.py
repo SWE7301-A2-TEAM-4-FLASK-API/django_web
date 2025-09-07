@@ -4,26 +4,10 @@ from django.contrib.auth import authenticate
 from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
-    fullname = forms.CharField(max_length=150, required=False, label='Full Name')
-    address = forms.CharField(max_length=255, required=False, label='Address')
-    phone = forms.CharField(max_length=20, required=False, label='Phone')
-
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('username', 'email', 'role', 'fullname', 'address', 'phone', 'password1', 'password2')
+        fields = ('username', 'email', 'role', 'password1', 'password2')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Add Bootstrap classes and helpful placeholders to all widgets for visibility
-        placeholders = {
-            'fullname': 'Jane Doe',
-            'username': 'jane_doe',
-            'email': 'jane@example.com',
-            'address': '123 Main St, City',
-            'phone': '+44 7700 900123',
-            'password1': 'Create a password',
-            'password2': 'Confirm your password',
-        }
         for name, field in self.fields.items():
             if name == 'role':
                 field.widget.attrs.update({'class': 'form-select'})
@@ -35,9 +19,6 @@ class CustomUserCreationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.fullname = self.cleaned_data.get('fullname', '')
-        user.address = self.cleaned_data.get('address', '')
-        user.phone = self.cleaned_data.get('phone', '')
         if commit:
             user.save()
         return user
