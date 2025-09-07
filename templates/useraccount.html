@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 p-5" style="background-image: url('/static/images/background/registerbackground2.jpeg'); background-size: cover; background-position: center; padding: 40px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h2 class="mb-3">Welcome to BlueWave</h2>
+      <p class="lead">Create an account to Use our API, view subscriptions, and access support.</p>
+
+      {% if request.user.is_authenticated %}
+        <p class="lead">Signed in as <strong>{{ request.user.username }}</strong>.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-3">
+          <a class="btn btn-primary" href="{% url 'accounts:user' %}">Go to Profile</a>
+          <a class="btn btn-outline-secondary" href="{% url 'accounts:logout' %}">Logout</a>
+        </div>
+      {% else %}
+        <p class="lead">Access your purchases, subscriptions, and settings.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-3" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
+          <a class="btn btn-primary" href="{% url 'accounts:login' %}">Login</a>
+          <a class="btn btn-outline-secondary" href="{% url 'accounts:register' %}">Create account</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
