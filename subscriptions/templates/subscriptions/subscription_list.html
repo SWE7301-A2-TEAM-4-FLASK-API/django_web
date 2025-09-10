@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">My Subscriptions</h2>
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Product</th>
+            <th>Plan</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Auto-Renewal</th>
+            <th>Status</th>
+            <th>Access Token</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sub in subscriptions %}
+          <tr>
+            <td>{{ sub.product.name }}</td>
+            <td>{{ sub.get_plan_display }}</td>
+            <td>{{ sub.start_date|date:"Y-m-d" }}</td>
+            <td>{{ sub.end_date|date:"Y-m-d" }}</td>
+            <td>{{ sub.auto_renewal|yesno:"Yes,No" }}</td>
+            <td>{{ sub.status }}</td>
+            <td>
+              <div class="input-group">
+                <input type="text" id="token-{{ sub.id }}" class="form-control" value="{{ sub.api_token }}" readonly>
+                <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('token-{{ sub.id }}').value)">Copy</button>
+              </div>
+            </td>
+            <td>
+              {% if sub.status == "active" %}
+                <a href="{% url 'subscriptions:cancel' sub.id %}" class="btn btn-danger btn-sm">Cancel</a>
+                <a href="{% url 'subscriptions:toggle_renewal' sub.id %}" class="btn btn-warning btn-sm">
+                  {% if sub.auto_renewal %}Stop Auto-Renewal{% else %}Enable Auto-Renewal{% endif %}
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="8" class="text-center">No subscriptions found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

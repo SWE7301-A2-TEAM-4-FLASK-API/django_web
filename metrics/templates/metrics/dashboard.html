@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Telemetry Dashboard</h2>
+  <div class="row">
+    {% for metric in metrics %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ metric.product.name }}</h5>
+          <p class="card-text">Value: {{ metric.value }}</p>
+          <p class="card-text">Timestamp: {{ metric.timestamp|date:"Y-m-d H:i" }}</p>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+      <p>No telemetry data available.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

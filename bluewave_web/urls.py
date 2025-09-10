@@ -18,14 +18,18 @@ from django.contrib import admin
 from django.urls import path, include
 from accounts.views import user as user_profile_view
 from django.views.generic import TemplateView
+from django.shortcuts import render
+
+def index(request):
+    return render(request, 'index.html')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', index, name='index'),  # This makes 'index' available for {% url 'index' %}
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('subscriptions/', include('subscriptions.urls', namespace='subscriptions')),
     path('products/', include('products.urls', namespace='products')),
     path('metrics/', include('metrics.urls', namespace='metrics')),
-    path('', TemplateView.as_view(template_name='index.html'), name='home'),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
     path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
     # Alias to support templates referring to 'useraccount'

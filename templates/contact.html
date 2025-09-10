@@ -1,82 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="container mt-4">
-  <div class="d-flex align-items-center gap-3 mb-2">
-    <h2 class="mb-0">Contact Us</h2>
-    <span class="badge bg-info text-dark">We usually reply within 24 hours</span>
-  </div>
-  <p class="text-muted">Questions about products, subscriptions, or our environmental monitoring? Reach out below.</p>
-
-  <div class="row g-4 mt-1 align-items-stretch">
-    <!-- Contact details / left column -->
-    <div class="col-12 col-md-5">
-      <div class="card h-100 shadow-sm">
-        <img src="{% static 'images/contact/contact.jpeg' %}" class="card-img-top" alt="BlueWave contact" />
-        <div class="card-body">
-          <h5 class="card-title">BlueWave Solutions</h5>
-          <ul class="list-unstyled small mb-3">
-            <li class="mb-2"><i class="fas fa-envelope me-2 text-primary"></i>
-              <a href="mailto:glorycharles9257@gmail.com">support@swe7301-team-5-2024-25.com</a>
-            </li>
-            <li class="mb-2"><i class="fas fa-phone me-2 text-primary"></i>
-              <a href="tel:+447443008605">+44 (0)7443 008 605</a>
-            </li>
-            <li class="mb-2"><i class="fas fa-location-dot me-2 text-primary"></i>
-              Orlando Village, Thynne Street, BL3 6BA, Bolton, UK
-            </li>
-          </ul>
-          <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-outline-dark btn-sm" href="https://github.com/SWE7301-TEAM-5-2025/" target="_blank" rel="noopener">
-              <i class="fab fa-github me-1"></i> GitHub
-            </a>
-            <a class="btn btn-outline-primary btn-sm" style="border-color:#026AA7;color:#026AA7" href="https://trello.com/b/7mRIhBHx/swe7301-team-5-2024-25/" target="_blank" rel="noopener">
-              <i class="fab fa-trello me-1"></i> Trello
-            </a>
-            <a class="btn btn-outline-danger btn-sm" style="border-color:#FF4F5A;color:#FF4F5A" href="https://app.mural.co/t/swe7301team51756/m/swe7301team51756/1756734201180/ce1b326f4e4d9989110cc268393b6eb56671b279?sender=ue8ec1804c29c16d582439632" target="_blank" rel="noopener">
-              <i class="fas fa-shapes me-1"></i> Miro
-            </a>
-            <a class="btn btn-outline-success btn-sm" style="border-color:#00B140;color:#00B140" href="https://www.lucidchart.com/" target="_blank" rel="noopener">
-              <i class="fas fa-project-diagram me-1"></i> Lucidchart
-            </a>
-          </div>
-        </div>
-      </div>
+<div class="container mt-5">
+  <h2>Contact Us</h2>
+  <form>
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name">
     </div>
-
-    <!-- Contact form / right column -->
-    <div class="col-12 col-md-7">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title mb-3">Send us a message</h5>
-          <form action="{% url 'contact' %}" method="post" novalidate>
-            {% csrf_token %}
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label for="id_name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="id_name" name="name" placeholder="Jane Doe" required />
-              </div>
-              <div class="col-md-6">
-                <label for="id_email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="id_email" name="email" placeholder="jane@example.com" required />
-              </div>
-              <div class="col-12">
-                <label for="id_subject" class="form-label">Subject</label>
-                <input type="text" class="form-control" id="id_subject" name="subject" placeholder="How can we help?" />
-              </div>
-              <div class="col-12">
-                <label for="id_message" class="form-label">Message</label>
-                <textarea class="form-control" id="id_message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
-              </div>
-              <div class="col-12 d-flex gap-2">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Send message</button>
-                <button type="reset" class="btn btn-outline-secondary" style="width: 100%;">Clear</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email">
     </div>
-  </div>
+    <div class="mb-3">
+      <label for="message" class="form-label">Message</label>
+      <textarea class="form-control" id="message" name="message" rows="4"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+  </form>
 </div>
 {% endblock %}
