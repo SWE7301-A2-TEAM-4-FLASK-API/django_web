@@ -5,6 +5,7 @@ from django.conf import settings
 from .services import get_jwt_token, fetch_telemetry
 from datetime import datetime, timedelta
 from django.contrib import messages
+from .models import Metric
 
 @login_required
 def dashboard(request):
@@ -66,8 +67,10 @@ def dashboard(request):
             normalized.append({'data': {'value': rec}})
 
     telemetry_source = 'demo' if used_demo else ('live' if normalized else 'none')
+    metrics = Metric.objects.all()
     return render(request, 'metrics/dashboard.html', {
         'telemetry': normalized,
         'telemetry_source': telemetry_source,
+        'metrics': metrics,
     })
 

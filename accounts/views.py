@@ -2,7 +2,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import CustomUserCreationForm, RoleAuthenticationForm
+from .forms import CustomUserCreationForm, RoleAuthenticationForm, ProfileForm
 from subscriptions.models import Subscription
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
@@ -56,5 +56,25 @@ def logout_view(request):
 
 @login_required
 def user(request):
-    subs = Subscription.objects.filter(user=request.user).select_related('product')
-    return render(request, 'accounts/profile.html', {'subscriptions': subs})
+    # Generate token (use actual password or a service account if needed)
+    token = get_jwt_token(request.user.username, None, request.user.role)
+    return render(request, 'accounts/profile.html', {
+        'user': request.user,
+        'api_token': token,
+    })
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('accounts:user')
+    else:
+        form = ProfileForm(instance=request.user)
+    return render(request, 'accounts/update.html', {'form': form})
+
+@login_required
+def user_settings(request):
+    return render(request, 'accounts/user_settings.html', {})

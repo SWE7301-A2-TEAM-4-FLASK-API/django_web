@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
@@ -52,5 +52,10 @@ class RoleAuthenticationForm(AuthenticationForm):
         selected_role = self.cleaned_data.get('role')
         if selected_role and getattr(user, 'role', None) != selected_role:
             raise forms.ValidationError('Selected role does not match your account role.', code='invalid_role')
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'email', 'role']  # Add/remove fields as needed
 
 

@@ -88,12 +88,18 @@ WSGI_APPLICATION = 'bluewave_web.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# MySQL configuration (set DB_* env vars in your environment)
+# SQLITE for development and testing (default)
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+# MySQL configuration (set DB_* env vars in your environment)
+"""DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'bluewave_db'),
+        'NAME': os.environ.get('DB_NAME', 'django'),
         'USER': os.environ.get('DB_USER', 'root'),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
@@ -103,7 +109,7 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
-}
+}"""
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -146,7 +152,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 
 # URL of the Flask API for metrics
-API_BASE_URL = os.environ.get('API_BASE_URL', 'http://localhost:5000')
+API_BASE_URL = os.environ.get('API_BASE_URL')
 
 # Optional API auth credentials for obtaining JWTs
 API_USERNAME = os.environ.get('API_USERNAME')
@@ -163,7 +169,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/products/'
 # Where to send unauthenticated users when login is required
 LOGIN_URL = '/accounts/login/'
-
+AUTH_USER_MODEL = 'accounts.CustomUser'
 # --- Security hardening (mostly enforced in production) ---
 # Cookies
 SESSION_COOKIE_SECURE = not DEBUG

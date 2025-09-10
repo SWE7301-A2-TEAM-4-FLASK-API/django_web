@@ -1,56 +1,31 @@
 <!-- templates/products/product_list.html -->
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-3">
-  <h2>Desalination Units</h2>
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Desalination Units</h2>
   <div class="row">
     {% for product in products %}
     <div class="col-md-4 mb-4">
-      <div class="card h-100">
+      <div class="card h-100 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">{{ product.name }}</h5>
           <p class="card-text">{{ product.description|truncatechars:100 }}</p>
           <p class="card-text"><strong>£{{ product.price }}</strong></p>
-            <div class="btn-group">
-              <a href="{% url 'products:detail' product.pk %}" class="btn btn-primary">View Details</a>
-              <a href="{% url 'subscriptions:subscribe' product.pk %}" class="btn btn-primary">Subscribe</a>
-            </div>
+          <div class="btn-group w-100">
+            <a href="{% url 'products:detail' product.pk %}" class="btn btn-primary">View Details</a>
+            <a href="{% url 'subscriptions:subscribe' product.pk %}" class="btn btn-success">Subscribe</a>
+          </div>
         </div>
       </div>
     </div>
     {% empty %}
-    <p>No products available.</p>
+    <div class="col-12 text-center">
+      <p>No products available.</p>
+    </div>
     {% endfor %}
   </div>
-</div>
-<div class="row">
-  <div class="col">
-    <h2> freshwater</h2>
-    <p>BlueWave offers a range of cutting-edge desalination units designed to convert seawater into fresh, potable water. Our units are engineered for efficiency, reliability, and ease of use, making them ideal for both residential and commercial applications. Whether you're looking to provide clean drinking water for your home or need a scalable solution for a larger operation, BlueWave has the perfect desalination unit to meet your needs.</p>
-    <h3>Key Features:</h3>
-    <ul>
-      <li>Advanced Reverse Osmosis Technology: Our units utilize state-of-the-art reverse osmosis membranes to ensure the highest quality of freshwater output.</li>
-      <li>Energy Efficiency: Designed with energy-saving features to minimize operational costs while maximizing water production.</li>
-      <li>Compact Design: Space-saving designs that can fit into various environments, from small homes to large industrial facilities.</li>
-      <li>User-Friendly Interface: Easy-to-use controls and monitoring systems for hassle-free operation.</li>
-      <li>Durability: Built with high-quality materials to withstand harsh marine environments and ensure long-term performance.</li>   
-    </ul>
-    <p>Explore our selection of desalination units and find the perfect solution to meet your freshwater needs.</p>
-    
-  </div>
-  <div class="col">
-    <h2>Environmental Monitoring</h2>
-    <p>BlueWave's environmental monitoring solutions provide real-time data and insights to help you manage your water resources effectively. Our advanced sensors and analytics tools enable you to track water quality, usage patterns, and system performance, ensuring optimal operation and compliance with environmental regulations.</p>
-    <h3>Key Features:</h3>
-    <ul>
-      <li>Real-Time Monitoring: Continuous tracking of water quality parameters such as salinity, turbidity, and temperature.</li>
-      <li>Data Analytics: Advanced analytics tools to identify trends, optimize performance, and predict maintenance needs.</li>
-      <li>Remote Access: Monitor your systems from anywhere with our secure cloud-based platform.</li>
-      <li>Custom Alerts: Set up alerts for critical events or threshold breaches to take immediate action.</li>
-      <li>Compliance Reporting: Generate reports to demonstrate compliance with environmental regulations and standards.</li>
-    </ul>   
-    <p>Leverage BlueWave's environmental monitoring solutions to ensure the sustainability and efficiency of your water management systems.</p>   
-     
+  <div class="text-center mt-3">
+    <a href="{% url 'products:list' %}" class="btn btn-secondary">View All Products</a>
   </div>
 </div>
 {% endblock %}
