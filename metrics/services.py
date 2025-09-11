@@ -3,7 +3,7 @@ from django.conf import settings
 import logging
 
 API_BASE = (settings.API_BASE_URL or '').rstrip('/')
-DEFAULT_TIMEOUT = 5  # seconds
+DEFAULT_TIMEOUT = 30  # seconds
 
 def get_jwt_token(username, password, role):
     """
