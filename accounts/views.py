@@ -78,3 +78,60 @@ def edit_profile(request):
 @login_required
 def user_settings(request):
     return render(request, 'accounts/user_settings.html', {})
+    
+def enable_2fa(request):
+    from django.shortcuts import render
+    from django.core.mail import send_mail
+    from django.conf import settings
+    import random
+    from django.contrib import messages
+
+    token_sent = False
+    user = request.user
+    if request.method == 'POST':
+        if 'send_token' in request.POST:
+            token = str(random.randint(100000, 999999))
+            request.session['2fa_token'] = token
+            if user.phone_number:
+                # Send token via SMS (Twilio or similar service)
+                try:
+                    from twilio.rest import Client
+                    twilio_sid = getattr(settings, 'TWILIO_ACCOUNT_SID', None)
+                    twilio_token = getattr(settings, 'TWILIO_AUTH_TOKEN', None)
+                    twilio_from = getattr(settings, 'TWILIO_PHONE_NUMBER', None)
+                    if twilio_sid and twilio_token and twilio_from:
+                        client = Client(twilio_sid, twilio_token)
+                        client.messages.create(
+                            body=f'Your verification code is: {token}',
+                            from_=twilio_from,
+                            to=user.phone_number
+                        )
+                        messages.success(request, 'Verification code sent to your phone.')
+                    else:
+                        messages.error(request, 'SMS service not configured. Token not sent.')
+                except Exception as e:
+                    messages.error(request, f'Error sending SMS: {e}')
+            else:
+                send_mail(
+                    'Your Two-Factor Authentication Code',
+                    f'Your verification code is: {token}',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    fail_silently=False,
+                )
+                messages.success(request, 'Verification code sent to your email.')
+            token_sent = True
+        elif 'verify_token' in request.POST:
+            entered_token = request.POST.get('token')
+            session_token = request.session.get('2fa_token')
+            if entered_token == session_token:
+                user.is_2fa_enabled = True
+                user.save()
+                messages.success(request, 'Two-Factor Authentication enabled successfully!')
+                if '2fa_token' in request.session:
+                    del request.session['2fa_token']
+                token_sent = False
+            else:
+                token_sent = True
+                messages.error(request, 'Invalid token. Please try again.')
+    return render(request, 'accounts/enable_2fa.html', {'token_sent': token_sent})

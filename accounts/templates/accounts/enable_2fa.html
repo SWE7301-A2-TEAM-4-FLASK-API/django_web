@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <h2 class="mb-4">Enable Two-Factor Authentication</h2>
+          <p>Click the button below to receive a verification code via email.</p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="send_token" class="btn btn-success">Send Verification Code</button>
+          </form>
+          {% if token_sent %}
+          <hr>
+          <form method="post">
+            {% csrf_token %}
+            <label for="token" class="form-label">Enter the code sent to your email:</label>
+            <input type="text" name="token" id="token" class="form-control mb-2" required>
+            <button type="submit" name="verify_token" class="btn btn-primary">Verify</button>
+          </form>
+          {% endif %}
+          <a href="{% url 'accounts:user' %}" class="btn btn-secondary mt-3">Back to Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

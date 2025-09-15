@@ -5,5 +5,11 @@
   <p>Welcome, {{ user.username }}!</p>
   <a href="{% url 'accounts:user' %}" class="btn btn-primary">View Profile</a>
   <a href="{% url 'subscriptions:list' %}" class="btn btn-success">My Subscriptions</a>
+  <hr>
+  <div class="mt-4">
+    <h4>Security</h4>
+    <p>For enhanced account protection, enable two-factor authentication (2FA).</p>
+    <a href="/account/two_factor/" class="btn btn-warning">Enable Two-Factor Authentication</a>
+  </div>
 </div>
 {% endblock %}
