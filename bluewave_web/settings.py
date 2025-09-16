@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -8,6 +9,7 @@ load_dotenv(BASE_DIR / '.env')
 # --- Core secrets & debug ---
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'dev-insecure-key'  # TODO: remove fallback in prod
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
+TESTING = any(arg in sys.argv for arg in ['test', 'pytest'])
 
 # Hosts / CSRF
 _allowed_hosts = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1')
@@ -115,6 +117,7 @@ API_BASE_URL = os.environ.get('API_BASE_URL')
 API_USERNAME = os.environ.get('API_USERNAME')
 API_PASSWORD = os.environ.get('API_PASSWORD')
 API_ROLE = os.environ.get('API_ROLE')
+API_CALLS_ENABLED = os.environ.get('API_CALLS_ENABLED', 'false' if TESTING else 'true').lower() in ('1','true','yes')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
