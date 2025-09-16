@@ -28,7 +28,7 @@
             <td>{{ sub.status }}</td>
             <td>
               <div class="input-group">
-                <input type="text" id="token-{{ sub.id }}" class="form-control" value="{{ sub.api_token }}" readonly>
+                <input type="text" id="token-{{ sub.id }}" class="form-control" value="{{ sub.api_token|default:'No token available' }}" readonly>
                 <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('token-{{ sub.id }}').value)">Copy</button>
               </div>
             </td>
@@ -37,6 +37,7 @@
                 <a href="{% url 'subscriptions:cancel' sub.id %}" class="btn btn-danger btn-sm">Cancel</a>
                 <a href="{% url 'subscriptions:toggle_renewal' sub.id %}" class="btn btn-warning btn-sm">
                   {% if sub.auto_renewal %}Stop Auto-Renewal{% else %}Enable Auto-Renewal{% endif %}
+                  <a href="{% url 'accounts:enable_2fa' %}" class="btn btn-success btn-sm">Enable Two-Factor Authentication</a>
                 </a>
               {% endif %}
             </td>

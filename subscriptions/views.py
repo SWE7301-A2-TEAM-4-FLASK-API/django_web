@@ -4,7 +4,8 @@ from .forms import SubscriptionForm
 from .models import Subscription
 from products.models import Product
 from metrics.services import get_jwt_token
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 
 @login_required
 def subscribe(request, product_id):
@@ -13,7 +14,7 @@ def subscribe(request, product_id):
         if form.is_valid():
             subscription = form.save(commit=False)
             subscription.user = request.user
-            subscription.start_date = datetime.now()
+            subscription.start_date = timezone.now()
             product = Product.objects.get(id=product_id)
             subscription.product = product
             subscription.price = product.price

@@ -1,34 +1,25 @@
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load environment variables from .env at project root
 load_dotenv(BASE_DIR / '.env')
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# Configure via env: DJANGO_DEBUG=True|False (default True for dev)
+# --- Core secrets & debug ---
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'dev-insecure-key'  # TODO: remove fallback in prod
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
+TESTING = any(arg in sys.argv for arg in ['test', 'pytest'])
 
-# Hosts and CSRF trusted origins (comma-separated)
+# Hosts / CSRF
 _allowed_hosts = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1')
 ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts.split(',') if h.strip()]
+
 _csrf_trusted = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+# MUST include scheme, e.g. https://example.com
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_trusted.split(',') if o.strip()]
 
-
-# Application definition
-
+# Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,10 +32,12 @@ INSTALLED_APPS = [
     'products',
     'subscriptions',
     'metrics',
+    # 2FA
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
 ]
 
-
-# Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Middleware
@@ -56,16 +49,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+    'django_otp.middleware.OTPMiddleware',   # ✅ required for two_factor
 ]
 
-# API base URL
-#API_BASE_URL = 'https://localhost:5030/'
-
-# Root URL configuration
 ROOT_URLCONF = 'bluewave_web.urls'
 
-# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -82,21 +70,10 @@ TEMPLATES = [
     },
 ]
 
-# WSGI application
 WSGI_APPLICATION = 'bluewave_web.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-# SQLITE for development and testing (default)
+# Database (MySQL)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-# MySQL configuration (set DB_* env vars in your environment)
-"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DB_NAME', 'django'),
@@ -104,93 +81,75 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
         'PORT': os.environ.get('DB_PORT', '3306'),
+        'CONN_MAX_AGE': 60,  # optional persistent connections
         'OPTIONS': {
-            # Recommended SQL mode for strictness; comment out if your server disallows this
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',  # optional
         },
     }
-}"""
+}
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# Password validators
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# I18N / TZ
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'UTC'     # keep; use timezone.now() in code
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# Static
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # ✅ needed for collectstatic in prod
 
+# Email (dev)
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
-
-
-# URL of the Flask API for metrics
+# API creds
 API_BASE_URL = os.environ.get('API_BASE_URL')
-
-# Optional API auth credentials for obtaining JWTs
 API_USERNAME = os.environ.get('API_USERNAME')
 API_PASSWORD = os.environ.get('API_PASSWORD')
 API_ROLE = os.environ.get('API_ROLE')
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+API_CALLS_ENABLED = os.environ.get('API_CALLS_ENABLED', 'false' if TESTING else 'true').lower() in ('1','true','yes')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth redirects
-# After successful login, send users to the products list
 LOGIN_REDIRECT_URL = '/products/'
-# Where to send unauthenticated users when login is required
 LOGIN_URL = '/accounts/login/'
-AUTH_USER_MODEL = 'accounts.CustomUser'
-# --- Security hardening (mostly enforced in production) ---
-# Cookies
+
+# Security hardening
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = True  # OK when forms are server-rendered; set False if JS must read the cookie
+# Set this False if your frontend reads the CSRF cookie from JS:
+CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
 
-# SecurityMiddleware headers
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 X_FRAME_OPTIONS = 'DENY'
 
-# HTTPS enforcement (enable in production)
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('1', 'true', 'yes') or (not DEBUG)
+# HTTPS
+SECURE_SSL_REDIRECT = (
+    os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('1', 'true', 'yes')
+    or (not DEBUG)
+)
 
-# HSTS is only effective over HTTPS; keep 0 in dev/tests
+# If behind a TLS-terminating proxy (nginx/ELB), uncomment to avoid redirect loops:
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0' if DEBUG else '31536000'))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'True').lower() in ('1','true','yes')
 SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'False').lower() in ('1','true','yes')
 
-# If running behind a proxy/ingress that terminates TLS, uncomment:
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# JWT secret (keep in env for prod)
+JWT_SECRET = os.environ.get('JWT_SECRET') or os.environ.get('JWT_SECRET_KEY', 'default_jwt_secret')

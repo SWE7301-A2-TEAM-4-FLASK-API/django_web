@@ -34,4 +34,6 @@ urlpatterns = [
     path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
     # Alias to support templates referring to 'useraccount'
     path('useraccount/', TemplateView.as_view(template_name='useraccount.html'), name='useraccount'),
+    # Two-factor authentication URLs
+    path('account/', include('two_factor.urls')),
 ]

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <h2 class="mb-4">Enable Two-Factor Authentication</h2>
+          <p>Choose how you want to receive your verification code.</p>
+          <form method="post" class="mb-3">
+            {% csrf_token %}
+            <div class="mb-2 text-start">
+              <label class="form-label">Delivery method</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="channel" id="channelEmail" value="email" checked>
+                <label class="form-check-label" for="channelEmail">Email ({{ request.user.email }})</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="channel" id="channelSms" value="sms">
+                <label class="form-check-label" for="channelSms">SMS {% if request.user.phone_number %}({{ request.user.phone_number }}){% else %}(enter phone below){% endif %}</label>
+              </div>
+            </div>
+            {% if not request.user.phone_number %}
+            <div class="mb-2 text-start">
+              <label for="phone_number" class="form-label">Phone number (with country code)</label>
+              <input type="tel" id="phone_number" name="phone_number" class="form-control" placeholder="+15551234567">
+            </div>
+            {% endif %}
+            <button type="submit" name="send_token" class="btn btn-success">Send Verification Code</button>
+          </form>
+          {% if token_sent %}
+          <hr>
+          <form method="post">
+            {% csrf_token %}
+            <label for="token" class="form-label">Enter the code sent to your email:</label>
+            <input type="text" name="token" id="token" class="form-control mb-2" required>
+            <button type="submit" name="verify_token" class="btn btn-primary">Verify</button>
+          </form>
+          {% if dev_token %}
+            <p class="mt-2 small text-muted">[DEV ONLY] Token: {{ dev_token }}</p>
+          {% endif %}
+          {% endif %}
+          <a href="{% url 'accounts:user' %}" class="btn btn-secondary mt-3">Back to Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

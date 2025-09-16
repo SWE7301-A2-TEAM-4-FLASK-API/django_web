@@ -11,6 +11,8 @@ class CustomUser(AbstractUser):
         ('admin', 'Admin'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='consumer')
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    is_2fa_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.username} ({self.get_role_display()})'

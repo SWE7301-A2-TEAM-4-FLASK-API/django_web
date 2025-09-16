@@ -25,5 +25,21 @@ class Subscription(models.Model):
     status = models.CharField(max_length=20, default='active')
     api_token = models.CharField(max_length=255, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.api_token:
+            import jwt
+            from django.conf import settings
+            import datetime
+            payload = {
+                'sub_id': self.id if self.id else None,
+                'user_id': self.user_id,
+                'product_id': self.product_id,
+                'plan': self.plan,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30)
+            }
+            secret = getattr(settings, 'JWT_SECRET', 'your_jwt_secret_key')
+            self.api_token = jwt.encode(payload, secret, algorithm='HS256')
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.user} - {self.product} ({self.plan})"
